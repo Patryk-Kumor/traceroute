@@ -2,6 +2,7 @@
 // indeks: 292601
 #include "traceroute.h"
 
+// Checksum pakietów zgodnie z wykładem
 u_int16_t compute_icmp_checksum (const void *buff, int length)
 {
     u_int32_t sum;
@@ -15,6 +16,7 @@ u_int16_t compute_icmp_checksum (const void *buff, int length)
     return (u_int16_t)(~(sum + (sum >> 16)));
 }
 
+// Wysyłanie pojedyńczego pakietu zgodnie z wykładem
 int single_send(int sockfd, int process_id, int ttl, struct sockaddr_in address, int i)
 {
     // Tworzenie nagłówka (wystarczy do echo)
@@ -26,19 +28,22 @@ int single_send(int sockfd, int process_id, int ttl, struct sockaddr_in address,
     icmp_header.checksum = 0;
     icmp_header.checksum = compute_icmp_checksum ((u_int16_t*)&icmp_header, sizeof(icmp_header));
     // Wysyłanie
-    setsockopt(sockfd, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl));
-    ssize_t bytes_sent = sendto(sockfd, &icmp_header, sizeof(icmp_header), 0, (struct sockaddr*)&address, sizeof(address));
-    if ( bytes_sent <= 0 )
+    if (setsockopt(sockfd, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl)) < 0)
     {
-        throw runtime_error("Nie wysłano pakietu - single"); // return -1;
+        throw runtime_error("Błąd manipulacji ustawień socket"); // return -1;
+    }
+    if (sendto(sockfd, &icmp_header, sizeof(icmp_header), 0, (struct sockaddr*)&address, sizeof(address)) < 0)
+    {
+        throw runtime_error("Nie wysłano pakietu"); // return -1;
     }
     return 1;
 }
 
+// Wysyłanie trzech pakietów
 void send(int sockfd, int ttl, int process_id, struct sockaddr_in address)
 {
     for(int i = 0; i < 3; i++)
     {
-        if (single_send(sockfd, process_id, ttl, address, i) < 0) throw runtime_error("Nie można wysłać pakietów");
+        single_send(sockfd, process_id, ttl, address, i);
     }
 }
