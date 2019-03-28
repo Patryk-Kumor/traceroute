@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++11 -Werror -Wall -Wextra
+CXXFLAGS = -std=c++11 -Wall -Wextra
 
 all: traceroute
 
@@ -13,7 +13,7 @@ send.o: send.cpp traceroute.h
 receive.o: receive.cpp traceroute.h
 
 clean:
-	$(RM) *.o
+	rm -f *.o
 
 distclean:
-	$(RM) traceroute *.o
+	rm -f traceroute *.o

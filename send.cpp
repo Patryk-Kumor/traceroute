@@ -30,11 +30,11 @@ int single_send(int sockfd, int process_id, int ttl, struct sockaddr_in address,
     // Wysyłanie
     if (setsockopt(sockfd, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl)) < 0)
     {
-        throw runtime_error("Błąd manipulacji ustawień socket"); // return -1;
+        throw runtime_error("Setsockopt error, błąd manipulacji ustawień"); 
     }
     if (sendto(sockfd, &icmp_header, sizeof(icmp_header), 0, (struct sockaddr*)&address, sizeof(address)) < 0)
     {
-        throw runtime_error("Nie wysłano pakietu"); // return -1;
+        throw runtime_error("Sendto error, nie wysłano pakietu");
     }
     return 1;
 }

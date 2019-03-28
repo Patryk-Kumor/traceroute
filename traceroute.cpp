@@ -7,13 +7,13 @@ int main(int argc, char* argv[]) try
     // Sprawdzanie liczby argumentów
     if (argc != 2)
     {
-        throw runtime_error("Nieprawidłowa liczba argumentów\n"); 
+        throw runtime_error("Nieprawidłowa liczba argumentów"); 
     }
     // Tworzenie socketów wymaga sudo
     int sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     if (sockfd < 0) 
     {
-        throw runtime_error("Socket error, może brakuje sudo?\n"); 
+        throw runtime_error("Socket error, może brakuje sudo?"); 
     }
     // Struct ip socketu
     struct sockaddr_in address;
@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) try
     // Konwertuje IP z tekstu do formatu binarnego, jeśli się nie uda (czyli ip jest nieporpawne) - zwraca 0
     if (inet_pton(AF_INET, argv[1], &address.sin_addr) == 0)
     {
-       throw runtime_error("IP error\n"); 
+       throw runtime_error("IP error, może adres jest niepoprawny?"); 
     }
     // Unikalny id procesu w celu identyfikacji requestów i odpowiedzi
     int process_id = getpid();
@@ -43,6 +43,7 @@ int main(int argc, char* argv[]) try
         }
     }
     // Koniec pracy
+    //cout << "ZAKOŃCZONO\n";
     return 0;
 }
 catch (const exception& e) 
