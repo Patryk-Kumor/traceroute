@@ -1,6 +1,8 @@
 CXX = g++
 CXXFLAGS = -std=c++11 -Werror -Wall -Wextra
 
+all: traceroute
+
 traceroute: traceroute.o send.o receive.o
 	$(CXX) $(CXXFLAGS) -o traceroute traceroute.o send.o receive.o
 
