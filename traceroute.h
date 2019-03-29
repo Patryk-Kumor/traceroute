@@ -21,6 +21,7 @@ typedef struct packet_info
     char *ip;
     int id;
     int ttl;
+    int seq;
     long int time;
     bool dest;
 } packet_info;
